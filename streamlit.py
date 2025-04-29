@@ -3,36 +3,42 @@ import numpy as np
 import tensorflow as tf
 
 # Load model TFLite
-interpreter = tf.lite.Interpreter(model_path="model_stroke_prediction.tflite")
+interpreter = tf.lite.Interpreter(model_path="model_stroke.tflite")
 interpreter.allocate_tensors()
 
 # Ambil detail input/output tensor
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
+# Judul aplikasi
 st.title("Stroke Prediction with TFLite")
 
 # Form input
 age = st.number_input('Age', min_value=0, max_value=120)
-hypertension = st.selectbox('Hypertension', [0, 1])
-heart_disease = st.selectbox('Heart Disease', [0, 1])
+hypertension = st.selectbox('Hypertension (0=No, 1=Yes)', [0, 1])
+heart_disease = st.selectbox('Heart Disease (0=No, 1=Yes)', [0, 1])
 avg_glucose_level = st.number_input('Average Glucose Level')
 bmi = st.number_input('BMI')
 
 if st.button("Predict"):
-    # Buat data input sesuai model
+    # Buat input data array, sesuaikan jumlah fiturnya dengan model
     input_data = np.array([[age, hypertension, heart_disease, avg_glucose_level, bmi]], dtype=np.float32)
 
-    # Set input tensor
+    # Debug info (optional)
+    st.write("Expected input shape from model:", input_details[0]['shape'])
+    st.write("Input data shape:", input_data.shape)
+
+    # Set input dan jalankan model
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
 
-    # Ambil hasil prediksi
+    # Ambil output hasil prediksi
     output_data = interpreter.get_tensor(output_details[0]['index'])
-    prediction = output_data[0][0]
+    prediction = output_data[0][0]  # asumsi output scalar
 
     # Tampilkan hasil
-    st.write("Prediction result:", round(prediction, 2))
+    st.subheader("Prediction Result:")
+    st.write(f"Stroke Risk Score: **{prediction:.2f}**")
     if prediction > 0.5:
         st.error("High risk of stroke!")
     else:
