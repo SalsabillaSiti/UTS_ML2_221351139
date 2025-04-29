@@ -7,7 +7,7 @@ if not os.path.exists("model_stroke.tflite"):
     print("File exists:", os.path.exists("model_stroke.tflite"))
 
 # Load model TFLite
-interpreter = tf.lite.Interpreter(model_path="models/model_stroke.tflite")
+interpreter = tf.lite.Interpreter(model_path="model_stroke.tflite")
 interpreter.allocate_tensors()
 
 # Ambil detail input/output tensor
