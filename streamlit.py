@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
+import os
 
 # Load model TFLite
 model_path = os.path.join(os.path.dirname(__file__), "model_stroke_prediction.tflite")
