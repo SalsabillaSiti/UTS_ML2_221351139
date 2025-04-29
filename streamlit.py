@@ -22,7 +22,7 @@ bmi = st.number_input('BMI')
 
 if st.button("Predict"):
     # Buat data input sesuai model (misal 5 fitur)
-    input_data = np.array([[age, hypertension, heart_disease, avg_glucose_level, bmi]], dtype=np.float32)
+   input_data = np.array([[age, hypertension, heart_disease, avg_glucose_level, bmi]], dtype=np.float32)
 
     # Set input ke model
     interpreter.set_tensor(input_details[0]['index'], input_data)
