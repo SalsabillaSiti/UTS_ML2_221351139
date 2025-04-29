@@ -1,9 +1,13 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
+import os
+if not os.path.exists("model_stroke.tflite"):
+    st.error("Model file 'model_stroke.tflite' not found. Please upload or place it in the correct directory.")
+    print("File exists:", os.path.exists("model_stroke.tflite"))
 
 # Load model TFLite
-interpreter = tf.lite.Interpreter(model_path="model_stroke.tflite")
+interpreter = tf.lite.Interpreter(model_path="models/model_stroke.tflite")
 interpreter.allocate_tensors()
 
 # Ambil detail input/output tensor
