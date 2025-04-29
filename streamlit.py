@@ -1,11 +1,10 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-import os
 
 # Load model TFLite
-model_path = os.path.join(os.path.dirname(__file__), "model_stroke_prediction.tflite")
-interpreter = tf.lite.Interpreter(model_path=model_path)
+interpreter = tf.lite.Interpreter(model_path="model_stroke_prediction.tflite")
+interpreter.allocate_tensors()
 
 # Ambil detail input/output tensor
 input_details = interpreter.get_input_details()
@@ -21,20 +20,20 @@ avg_glucose_level = st.number_input('Average Glucose Level')
 bmi = st.number_input('BMI')
 
 if st.button("Predict"):
-    # Buat data input sesuai model (misal 5 fitur)
-   input_data = np.array([[age, hypertension, heart_disease, avg_glucose_level, bmi]], dtype=np.float32)
+    # Buat data input sesuai model
+    input_data = np.array([[age, hypertension, heart_disease, avg_glucose_level, bmi]], dtype=np.float32)
 
-    # Set input ke model
+    # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], input_data)
-
-    # Jalankan prediksi
     interpreter.invoke()
 
-    # Ambil output
+    # Ambil hasil prediksi
     output_data = interpreter.get_tensor(output_details[0]['index'])
     prediction = output_data[0][0]
 
+    # Tampilkan hasil
+    st.write("Prediction result:", round(prediction, 2))
     if prediction > 0.5:
-        st.error(f"High risk of stroke ({prediction:.2f})")
+        st.error("High risk of stroke!")
     else:
-        st.success(f"Low risk of stroke ({prediction:.2f})")
+        st.success("Low risk of stroke.")
