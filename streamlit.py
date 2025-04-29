@@ -3,8 +3,8 @@ import numpy as np
 import tensorflow as tf
 
 # Load model TFLite
-interpreter = tf.lite.Interpreter(model_path="model_stroke.tflite")
-interpreter.allocate_tensors()
+model_path = os.path.join(os.path.dirname(__file__), "model_stroke_prediction.tflite")
+interpreter = tf.lite.Interpreter(model_path=model_path)
 
 # Ambil detail input/output tensor
 input_details = interpreter.get_input_details()
